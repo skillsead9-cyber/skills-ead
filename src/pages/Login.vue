@@ -1,9 +1,8 @@
 <template>
-  <v-container fluid class="fill-height">
+  <v-container fluid class="fill-height px-4">
     <v-row align="center" justify="center" class="fill-height">
-      <v-col cols="12" sm="8" md="6" lg="4">
+      <v-col cols="12" sm="10" md="7" lg="4">
         <v-card elevation="4" class="pa-6">
-          <!-- Logo SKILLS -->
           <div class="text-center mb-6">
             <v-img
               src="/logo-skills.png"
@@ -15,19 +14,18 @@
             />
             <h1 class="text-h4 font-weight-bold text-primary">SKILLS Educacional</h1>
             <p class="text-body-2 text-medium-emphasis mt-2">
-              Ambiente Virtual de Aprendizagem
+              Acesso com sessao backend
             </p>
           </div>
 
-          <!-- Formulário de Login -->
           <v-form ref="form" v-model="valid" @submit.prevent="handleLogin">
             <v-text-field
-              v-model="email"
-              label="E-mail"
-              type="email"
-              prepend-inner-icon="mdi-email"
+              v-model="username"
+              label="Usuario"
+              autocomplete="username"
+              prepend-inner-icon="mdi-account"
               variant="outlined"
-              :rules="emailRules"
+              :rules="usernameRules"
               required
               class="mb-3"
             />
@@ -36,18 +34,12 @@
               v-model="password"
               label="Senha"
               type="password"
+              autocomplete="current-password"
               prepend-inner-icon="mdi-lock"
               variant="outlined"
               :rules="passwordRules"
               required
               class="mb-4"
-            />
-
-            <v-checkbox
-              v-model="remember"
-              label="Lembrar-me"
-              color="primary"
-              class="mb-2"
             />
 
             <v-alert
@@ -67,36 +59,11 @@
               size="large"
               block
               :loading="loading"
-              class="mb-3"
             >
               Entrar
             </v-btn>
-
-            <div class="text-center">
-              <v-btn
-                variant="text"
-                size="small"
-                color="primary"
-              >
-                Esqueci minha senha
-              </v-btn>
-            </div>
           </v-form>
         </v-card>
-
-        <!-- Informações adicionais -->
-        <div class="text-center mt-4">
-          <p class="text-body-2 text-medium-emphasis">
-            Não tem uma conta?
-            <v-btn
-              variant="text"
-              size="small"
-              color="primary"
-            >
-              Entre em contato
-            </v-btn>
-          </p>
-        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -112,42 +79,37 @@ const authStore = useAuthStore()
 
 const form = ref(null)
 const valid = ref(false)
-const email = ref('')
+const username = ref('')
 const password = ref('')
-const remember = ref(false)
 const loading = ref(false)
 const error = ref('')
 
-const emailRules = [
-  v => !!v || 'E-mail é obrigatório',
-  v => /.+@.+\..+/.test(v) || 'E-mail deve ser válido'
+const usernameRules = [
+  (value) => !!value || 'Usuario e obrigatorio',
+  (value) => (value && value.length >= 3) || 'Usuario deve ter no minimo 3 caracteres'
 ]
 
 const passwordRules = [
-  v => !!v || 'Senha é obrigatória',
-  v => (v && v.length >= 6) || 'Senha deve ter no mínimo 6 caracteres'
+  (value) => !!value || 'Senha e obrigatoria',
+  (value) => (value && value.length >= 3) || 'Senha deve ter no minimo 3 caracteres'
 ]
 
 const handleLogin = async () => {
-  const { valid: isValid } = await form.value.validate()
-  
-  if (!isValid) return
+  const validationResult = await form.value?.validate()
+  if (!validationResult?.valid) return
 
   loading.value = true
   error.value = ''
 
   try {
-    // Mock de autenticação
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
     await authStore.login({
-      email: email.value,
+      username: username.value,
       password: password.value
     })
 
-    router.push({ name: 'dashboard' })
-  } catch (err) {
-    error.value = 'E-mail ou senha inválidos'
+    await router.push({ name: 'dashboard' })
+  } catch (loginError) {
+    error.value = loginError?.message || authStore.authError || 'Falha no login.'
   } finally {
     loading.value = false
   }
@@ -157,6 +119,6 @@ const handleLogin = async () => {
 <style scoped>
 .fill-height {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0B132B 0%, #1A237E 100%);
+  background: linear-gradient(135deg, #0b132b 0%, #1a237e 100%);
 }
 </style>

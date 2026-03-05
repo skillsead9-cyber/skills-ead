@@ -2,19 +2,20 @@
   <div class="landing-page">
     <!-- Header Fixo -->
     <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-      <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
-        <!-- Logo -->
-        <div class="flex items-center space-x-2">
-          <img 
-            src="/logo-skills.png" 
-            alt="Grupo Transformar - SKILLS Educacional" 
-            class="h-10 w-auto"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-          />
-          <div class="hidden font-bold text-xl text-primary">
-            Grupo Transformar
-          </div>
+      <!-- Logo fora da navbar para usar altura maxima do header -->
+      <div  class="absolute left-0 px-3 py-3 top-0 bottom-0 z-10 ml-3  flex items-center">
+        <img 
+          src="/logo-skills.png" 
+          alt="Grupo Transformar - SKILLS Educacional" 
+          class="h-full w-auto object-contain"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        />
+        <div class="hidden font-bold text-xl text-primary">
+          Grupo Transformar
         </div>
+      </div>
+
+      <nav class="container mx-auto px-4 py-4 pl-24 md:pl-40 flex items-center justify-between">
 
         <!-- Menu de Navegação (Desktop) -->
         <ul class="hidden md:flex items-center space-x-6">

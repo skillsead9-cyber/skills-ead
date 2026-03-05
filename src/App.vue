@@ -20,7 +20,3 @@ const layout = computed(() => {
   return route.meta.layout === 'empty' ? EmptyLayout : DefaultLayout
 })
 </script>
-
-<style>
-@import '@/assets/styles/main.css';
-</style>

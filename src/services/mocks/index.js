@@ -7,49 +7,6 @@
 const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms))
 
 /**
- * Mock de autenticação
- */
-export const mockAuth = {
-  async login(credentials) {
-    await delay(1000)
-    
-    // Simula validação
-    if (credentials.email === 'admin@skills.com' && credentials.password === 'admin123') {
-      return {
-        data: {
-          token: 'mock_token_' + Date.now(),
-          user: {
-            id: 1,
-            name: 'Aluno Demo',
-            email: credentials.email,
-            role: 'student'
-          }
-        }
-      }
-    }
-    
-    throw new Error('Credenciais inválidas')
-  },
-
-  async logout() {
-    await delay(300)
-    return { data: { message: 'Logout realizado com sucesso' } }
-  },
-
-  async getCurrentUser() {
-    await delay(500)
-    return {
-      data: {
-        id: 1,
-        name: 'Aluno Demo',
-        email: 'admin@skills.com',
-        role: 'student'
-      }
-    }
-  }
-}
-
-/**
  * Mock de cursos
  */
 export const mockCursos = {

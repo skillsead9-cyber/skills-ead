@@ -13,14 +13,6 @@
       
       <!-- Logo SKILLS -->
       <v-app-bar-title class="d-flex align-center">
-        <v-img
-          src="/logo-skills.png"
-          alt="SKILLS Educacional"
-          max-height="40"
-          max-width="120"
-          contain
-          class="mr-4"
-        />
         <span class="text-h6 font-weight-bold">SKILLS Educacional</span>
       </v-app-bar-title>
 
@@ -75,6 +67,12 @@
           :to="{ name: 'cursos' }"
         />
         <v-list-item
+          prepend-icon="mdi-tools"
+          title="Ferramentas"
+          value="ferramentas"
+          :to="{ name: 'ferramentas' }"
+        />
+        <v-list-item
           prepend-icon="mdi-file-document"
           title="Materiais"
           value="materiais"
@@ -121,12 +119,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const drawer = ref(true)
 
 const handleLogout = () => {
-  // Mock de logout - redireciona para login
+  authStore.logout()
   router.push({ name: 'login' })
 }
 </script>

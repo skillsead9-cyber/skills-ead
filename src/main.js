@@ -1,18 +1,22 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
-// Importa estilos globais (incluindo Tailwind)
+import { useAuthStore } from '@/stores'
+import { pinia } from '@/stores/pinia'
 import './assets/styles/main.css'
 
-// Cria a instância da aplicação Vue
 const app = createApp(App)
 
-// Instala plugins
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
 app.use(vuetify)
 
-// Monta a aplicação
-app.mount('#app')
+const authStore = useAuthStore(pinia)
+
+const bootstrap = async () => {
+  await authStore.checkSession()
+  app.mount('#app')
+}
+
+bootstrap()

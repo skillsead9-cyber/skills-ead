@@ -1,225 +1,105 @@
-# SKILLS Educacional
+# SKILLS Educacional Frontend
 
-Plataforma de Ambiente Virtual de Aprendizagem (AVA) desenvolvida para o Grupo Transformar.
+Frontend da plataforma SKILLS (Vue 3 + Vuetify), com autenticacao real via backend Flask usando sessao/cookie.
 
-## 🚀 Stack Tecnológica
+## Stack
+- Vue 3 (Composition API)
+- Vite
+- Vuetify 3
+- Vue Router
+- Pinia
+- Axios
+- TipTap
+- Docker + Nginx
+- Vitest + Vue Test Utils
 
-- **Vue.js 3** - Framework JavaScript (Composition API + `<script setup>`)
-- **Vite** - Build tool e dev server
-- **Vuetify 3** - Framework UI Material Design
-- **Vue Router** - Roteamento SPA
-- **Pinia** - Gerenciamento de estado
-- **TipTap** - Editor de texto rico (WYSIWYG)
-- **Axios** - Cliente HTTP
-- **Docker** - Containerização
-- **Nginx** - Servidor web e proxy reverso
+## Estado atual da implementacao
+- Login: integrado ao backend real (`POST /login` com `username` + `password`).
+- Sessao: baseada em cookie (`withCredentials`).
+- Demais modulos: placeholders funcionais para continuidade futura.
+- Matriz de conclusao da fase: `docs/FRONTEND_IMPLEMENTATION_STATUS.md`.
 
-## 📋 Pré-requisitos
+## Variaveis de ambiente
+Use `.env.example` como base.
 
-- Node.js 18+ e npm
-- Docker e Docker Compose (para produção)
+| Variavel | Descricao | Exemplo |
+|---|---|---|
+| `VITE_AUTH_BASE_URL` | Base da autenticacao web | `http://localhost:5000` |
+| `VITE_API_BASE_URL` | Base da API REST | `http://localhost:5000/api/v1` |
+| `VITE_REQUEST_TIMEOUT_MS` | Timeout de requisicao | `10000` |
+| `VITE_ENABLE_MOCKS` | Flag para mocks locais | `false` |
 
-## 🛠️ Instalação e Desenvolvimento
+Arquivos incluidos:
+- `.env.example`
+- `.env.development`
+- `.env.production`
 
-### 1. Instalar dependências
-
+## Desenvolvimento local
+1. Instalar dependencias:
 ```bash
 npm install
 ```
-
-### 2. Executar em modo desenvolvimento
-
+2. Rodar em desenvolvimento:
 ```bash
 npm run dev
 ```
-
-A aplicação estará disponível em `http://localhost:3000`
-
-### 3. Build para produção
-
+3. Rodar testes:
+```bash
+npm run test:run
+```
+4. Build de producao:
 ```bash
 npm run build
 ```
 
-Os arquivos otimizados serão gerados na pasta `dist/`
+## Credenciais de login (backend)
+O frontend envia:
+- Campo `username`
+- Campo `password`
 
-### 4. Preview da build de produção
+Endpoint esperado:
+- `POST {VITE_AUTH_BASE_URL}/login`
+- `Content-Type: application/x-www-form-urlencoded`
 
+## Rotas principais
+- `/` landing
+- `/login` autenticacao
+- `/dashboard` protegida
+- `/cursos` protegida
+- `/cursos/:id` protegida (placeholder)
+- `/ferramentas` protegida (demo de componentes, upload e editor)
+
+## Estrutura relevante
+```text
+src/
+  components/forms/         # FileUpload e RichTextEditor
+  layouts/                  # layouts base
+  pages/                    # telas
+  router/                   # guard de sessao
+  services/
+    api.js                  # axios com withCredentials + normalizacao de erro
+    auth.js                 # login/checkSession/logoutLocal
+  stores/
+    auth.js                 # estado de autenticacao
+    cursos.js               # placeholder de cursos
+    uploads.js              # estado de upload
+    pinia.js
+```
+
+## Docker
+Consulte `DOCKER.md` para fluxo completo.
+
+Comandos rapidos:
 ```bash
-npm run preview
+./start-dev.sh
+./start-prod.sh
 ```
 
-## 🐳 Docker
+## SSL/HTTPS
+Pre-configurado no `nginx.conf`. Para habilitar:
+1. Criar pasta `ssl/`
+2. Adicionar `skills.crt` e `skills.key`
+3. Descomentar volume `./ssl:/etc/nginx/ssl:ro` no `docker-compose.yml`
 
-### Inicialização Rápida com Scripts
-
-O projeto inclui scripts dedicados para cada ambiente:
-
-#### Scripts Separados (Recomendado)
-
-```bash
-# Dar permissão de execução (apenas na primeira vez)
-chmod +x start-dev.sh start-prod.sh
-
-# Desenvolvimento
-./start-dev.sh          # Inicia
-./start-dev.sh logs     # Ver logs
-./start-dev.sh stop     # Parar
-./start-dev.sh restart  # Reiniciar
-./start-dev.sh status   # Ver status
-
-# Produção
-./start-prod.sh          # Inicia
-./start-prod.sh logs     # Ver logs
-./start-prod.sh stop     # Parar
-./start-prod.sh restart  # Reiniciar
-./start-prod.sh status   # Ver status
-./start-prod.sh rebuild  # Rebuild completo
-```
-
-#### Script Unificado (Alternativa)
-
-Também disponível o script `start.sh` com todas as opções:
-
-```bash
-chmod +x start.sh
-./start.sh dev          # Desenvolvimento
-./start.sh prod         # Produção
-./start.sh stop [dev|prod]
-./start.sh logs [dev|prod]
-./start.sh status
-./start.sh help
-```
-
-### Modo Desenvolvimento
-
-O ambiente de desenvolvimento usa hot reload e monta o código fonte como volume:
-
-```bash
-# Usando o script
-./start.sh dev
-
-# Ou manualmente
-docker-compose -f docker-compose.dev.yml up -d --build
-```
-
-A aplicação estará disponível em `http://localhost:3000` com hot reload ativo.
-
-### Modo Produção
-
-O ambiente de produção faz build da aplicação e serve via Nginx:
-
-```bash
-# Usando o script
-./start.sh prod
-
-# Ou manualmente
-docker-compose -f docker-compose.yml up -d --build
-```
-
-A aplicação estará disponível em:
-- HTTP: `http://localhost`
-- HTTPS: `https://localhost` (se certificados estiverem configurados)
-
-### Build manual da imagem Docker
-
-```bash
-# Produção
-docker build -t skills-educacional .
-docker run -p 80:80 -p 443:443 skills-educacional
-
-# Desenvolvimento
-docker build -f Dockerfile.dev -t skills-educacional-dev .
-docker run -p 3000:3000 -v $(pwd)/src:/app/src skills-educacional-dev
-```
-
-## 🔒 Configuração SSL/HTTPS
-
-Para habilitar HTTPS em produção:
-
-1. Obtenha certificados SSL válidos (Let's Encrypt, etc.)
-2. Coloque os certificados na pasta `ssl/`:
-   - `skills.crt` (certificado)
-   - `skills.key` (chave privada)
-3. Descomente as linhas de volume no `docker-compose.yml`:
-   ```yaml
-   volumes:
-     - ./ssl:/etc/nginx/ssl:ro
-   ```
-4. Ajuste o `server_name` no `nginx.conf` para seu domínio
-
-## 📁 Estrutura do Projeto
-
-```
-skills/
-├── public/                 # Arquivos estáticos públicos
-├── src/
-│   ├── assets/            # Recursos estáticos (imagens, estilos)
-│   ├── components/        # Componentes Vue reutilizáveis
-│   │   ├── forms/        # Componentes de formulário
-│   │   ├── layout/       # Componentes de layout
-│   │   └── ui/           # Componentes UI genéricos
-│   ├── layouts/          # Layouts de página
-│   ├── pages/            # Páginas/views da aplicação
-│   ├── plugins/          # Plugins Vue (Vuetify, etc.)
-│   ├── router/           # Configuração de rotas
-│   ├── services/         # Serviços e API (mockada)
-│   ├── stores/           # Stores Pinia
-│   ├── App.vue           # Componente raiz
-│   └── main.js           # Entry point
-├── Dockerfile            # Build multi-stage Docker
-├── docker-compose.yml    # Orquestração Docker
-├── nginx.conf           # Configuração Nginx
-└── vite.config.js       # Configuração Vite
-```
-
-## 🎨 Identidade Visual
-
-O tema personalizado SKILLS utiliza as seguintes cores:
-
-- **Primary**: `#0B132B` (Azul Marinho Escuro)
-- **Secondary**: `#00E676` (Verde Vivo)
-- **Accent**: `#FFD600` (Amarelo Ouro)
-- **Background**: Cores claras (branco/gelo)
-
-## 🔑 Credenciais de Teste
-
-Para login de desenvolvimento:
-- **E-mail**: `admin@skills.com`
-- **Senha**: `admin123`
-
-> **Nota**: Todas as APIs são mockadas no Front-End. Não há backend real implementado.
-
-## 📝 Componentes Principais
-
-### FileUpload.vue
-Componente de upload de arquivos com drag-and-drop, barra de progresso e validação.
-
-### RichTextEditor.vue
-Editor de texto rico com TipTap, suportando formatação, tabelas, links e imagens.
-
-## 🚧 Desenvolvimento
-
-### Adicionar nova rota
-
-1. Crie o componente em `src/pages/`
-2. Adicione a rota em `src/router/index.js`
-
-### Adicionar novo store Pinia
-
-1. Crie o store em `src/stores/`
-2. Importe e use nos componentes necessários
-
-### Mockar nova API
-
-1. Adicione função mock em `src/services/mocks/index.js`
-2. Use no componente ou store conforme necessário
-
-## 📄 Licença
-
-Proprietário - Grupo Transformar / SKILLS Educacional
-
-## 👥 Suporte
-
-Para suporte técnico, entre em contato com a equipe de desenvolvimento.
-# skills-ead
+## Observacao
+Este ciclo implementa backend real somente para login. Integracoes de negocio (cursos, atividades, etc.) ficam para as proximas etapas.

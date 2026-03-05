@@ -1,47 +1,44 @@
 <template>
   <v-card>
     <v-card-title>
-      <v-icon left>mdi-cloud-upload</v-icon>
+      <v-icon start>mdi-cloud-upload</v-icon>
       Upload de Arquivos
     </v-card-title>
-    
+
     <v-card-text>
-      <!-- Área de Drag and Drop -->
       <v-file-input
         v-model="files"
         :multiple="multiple"
         :accept="accept"
-        :max-size="maxSize"
         :show-size="true"
         :chips="true"
         :clearable="true"
-        label="Arraste arquivos aqui ou clique para selecionar"
+        label="Selecione os arquivos"
         prepend-icon="mdi-paperclip"
         variant="outlined"
-        @change="handleFileChange"
         class="mb-4"
+        @update:model-value="handleSelection"
       />
 
-      <!-- Lista de Arquivos Selecionados -->
       <v-list v-if="selectedFiles.length > 0" class="mb-4">
         <v-list-item
           v-for="(file, index) in selectedFiles"
-          :key="index"
+          :key="`${file.name}-${index}`"
           :title="file.name"
           :subtitle="formatFileSize(file.size)"
         >
-          <template v-slot:prepend>
+          <template #prepend>
             <v-icon :color="getFileIconColor(file.type)">
               {{ getFileIcon(file.type) }}
             </v-icon>
           </template>
-          
-          <template v-slot:append>
+          <template #append>
             <v-btn
               icon
               size="small"
               variant="text"
               @click="removeFile(index)"
+              aria-label="Remover arquivo"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -49,7 +46,6 @@
         </v-list-item>
       </v-list>
 
-      <!-- Barra de Progresso -->
       <v-progress-linear
         v-if="uploading"
         :model-value="uploadProgress"
@@ -58,12 +54,11 @@
         rounded
         class="mb-2"
       />
-      
+
       <div v-if="uploading" class="text-caption text-center">
         {{ uploadProgress }}% - {{ currentFileName }}
       </div>
 
-      <!-- Botões de Ação -->
       <div class="d-flex justify-end gap-2 mt-4">
         <v-btn
           variant="outlined"
@@ -78,12 +73,11 @@
           :disabled="selectedFiles.length === 0 || uploading"
           :loading="uploading"
         >
-          <v-icon left>mdi-upload</v-icon>
+          <v-icon start>mdi-upload</v-icon>
           Enviar Arquivos
         </v-btn>
       </div>
 
-      <!-- Mensagens de Feedback -->
       <v-alert
         v-if="uploadSuccess"
         type="success"
@@ -92,7 +86,7 @@
         class="mt-4"
         @click:close="uploadSuccess = false"
       >
-        Arquivos enviados com sucesso!
+        Arquivos enviados com sucesso.
       </v-alert>
 
       <v-alert
@@ -101,7 +95,7 @@
         variant="tonal"
         dismissible
         class="mt-4"
-        @click:close="uploadError = false"
+        @click:close="uploadError = ''"
       >
         {{ uploadError }}
       </v-alert>
@@ -110,7 +104,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   multiple: {
@@ -123,7 +117,7 @@ const props = defineProps({
   },
   maxSize: {
     type: Number,
-    default: 10 * 1024 * 1024 // 10MB padrão
+    default: 10 * 1024 * 1024
   }
 })
 
@@ -137,23 +131,28 @@ const currentFileName = ref('')
 const uploadSuccess = ref(false)
 const uploadError = ref('')
 
-const handleFileChange = (event) => {
-  if (event.target?.files) {
-    const fileList = Array.from(event.target.files)
-    
-    // Validação de tamanho
-    const invalidFiles = fileList.filter(file => file.size > props.maxSize)
-    if (invalidFiles.length > 0) {
-      uploadError.value = `Alguns arquivos excedem o tamanho máximo de ${formatFileSize(props.maxSize)}`
-      return
-    }
-    
-    selectedFiles.value = [...selectedFiles.value, ...fileList]
+const normalizeFiles = (value) => {
+  if (!value) return []
+  return Array.isArray(value) ? value : [value]
+}
+
+const handleSelection = (value) => {
+  const parsedFiles = normalizeFiles(value)
+
+  const invalidFile = parsedFiles.find((file) => file.size > props.maxSize)
+  if (invalidFile) {
+    uploadError.value = `Arquivo acima do limite de ${formatFileSize(props.maxSize)}.`
+    selectedFiles.value = []
+    return
   }
+
+  uploadError.value = ''
+  selectedFiles.value = parsedFiles
 }
 
 const removeFile = (index) => {
   selectedFiles.value.splice(index, 1)
+  files.value = [...selectedFiles.value]
 }
 
 const clearFiles = () => {
@@ -165,7 +164,7 @@ const clearFiles = () => {
 }
 
 const handleUpload = async () => {
-  if (selectedFiles.value.length === 0) return
+  if (!selectedFiles.value.length) return
 
   uploading.value = true
   uploadProgress.value = 0
@@ -173,15 +172,16 @@ const handleUpload = async () => {
   uploadSuccess.value = false
 
   try {
-    // Simulação de upload com progresso
-    for (let i = 0; i < selectedFiles.value.length; i++) {
+    const totalFiles = selectedFiles.value.length
+    for (let i = 0; i < totalFiles; i += 1) {
       const file = selectedFiles.value[i]
       currentFileName.value = file.name
 
-      // Simula progresso de upload
       for (let progress = 0; progress <= 100; progress += 10) {
-        await new Promise(resolve => setTimeout(resolve, 100))
-        uploadProgress.value = Math.round(((i / selectedFiles.value.length) * 100) + (progress / selectedFiles.value.length))
+        await new Promise((resolve) => setTimeout(resolve, 90))
+        uploadProgress.value = Math.round(
+          ((i / totalFiles) * 100) + (progress / totalFiles)
+        )
       }
 
       emit('upload', file)
@@ -189,14 +189,9 @@ const handleUpload = async () => {
 
     uploadProgress.value = 100
     uploadSuccess.value = true
-    emit('upload-complete', selectedFiles.value)
-    
-    // Limpa após sucesso (opcional)
-    setTimeout(() => {
-      clearFiles()
-    }, 2000)
+    emit('upload-complete', [...selectedFiles.value])
   } catch (error) {
-    uploadError.value = 'Erro ao enviar arquivos. Tente novamente.'
+    uploadError.value = 'Falha no upload. Tente novamente.'
     emit('upload-error', error)
   } finally {
     uploading.value = false
@@ -204,34 +199,29 @@ const handleUpload = async () => {
 }
 
 const formatFileSize = (bytes) => {
-  if (bytes === 0) return '0 Bytes'
+  if (!bytes) return '0 Bytes'
   const k = 1024
   const sizes = ['Bytes', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+  return `${Math.round((bytes / Math.pow(k, i)) * 100) / 100} ${sizes[i]}`
 }
 
 const getFileIcon = (mimeType) => {
   if (!mimeType) return 'mdi-file'
-  
   if (mimeType.startsWith('image/')) return 'mdi-image'
   if (mimeType.startsWith('video/')) return 'mdi-video'
   if (mimeType.startsWith('audio/')) return 'mdi-music'
   if (mimeType.includes('pdf')) return 'mdi-file-pdf-box'
   if (mimeType.includes('word')) return 'mdi-file-word-box'
   if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) return 'mdi-file-excel-box'
-  if (mimeType.includes('zip') || mimeType.includes('rar')) return 'mdi-folder-zip'
-  
   return 'mdi-file-document'
 }
 
 const getFileIconColor = (mimeType) => {
   if (!mimeType) return 'grey'
-  
   if (mimeType.startsWith('image/')) return 'primary'
   if (mimeType.startsWith('video/')) return 'secondary'
   if (mimeType.includes('pdf')) return 'error'
-  
   return 'accent'
 }
 </script>
