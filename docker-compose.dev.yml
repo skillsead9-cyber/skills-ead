@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: skills-educacional-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Monta o código fonte para hot reload (read-write para permitir cache do Vite)
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./index.html:/app/index.html
+      - ./vite.config.js:/app/vite.config.js
+      - ./package.json:/app/package.json
+      - ./tailwind.config.js:/app/tailwind.config.js
+      - ./postcss.config.js:/app/postcss.config.js
+      # Volume para node_modules (evita reinstalação)
+      - node_modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:3000
+    command: npm run dev -- --host
+    networks:
+      - skills-network
+    stdin_open: true
+    tty: true
+
+volumes:
+  node_modules:
+
+networks:
+  skills-network:
+    driver: bridge

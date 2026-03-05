@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skills-educacional-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Volumes para certificados SSL (descomente e ajuste os caminhos conforme necessário)
+      # - ./ssl:/etc/nginx/ssl:ro
+      # Volume para logs
+      - ./logs:/var/log/nginx
+    restart: unless-stopped
+    networks:
+      - skills-network
+    environment:
+      - NODE_ENV=production
+
+networks:
+  skills-network:
+    driver: bridge
