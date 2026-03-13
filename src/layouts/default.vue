@@ -4,16 +4,17 @@
     <v-app-bar
       :elevation="2"
       color="primary"
+      class="app-bar"
       dark
     >
       <v-app-bar-nav-icon
-        @click="drawer = !drawer"
+        @click="toggleDrawer"
         class="d-md-none"
       />
       
       <!-- Logo SKILLS -->
-      <v-app-bar-title class="d-flex align-center">
-        <span class="text-h6 font-weight-bold">SKILLS Educacional</span>
+      <v-app-bar-title class="app-bar-title">
+        <span class="app-bar-title-text font-weight-bold">SKILLS Educacional</span>
       </v-app-bar-title>
 
       <v-spacer />
@@ -46,51 +47,31 @@
     <!-- Navigation Drawer Lateral -->
     <v-navigation-drawer
       v-model="drawer"
-      :permanent="$vuetify.display.mdAndUp"
-      :temporary="$vuetify.display.smAndDown"
+      :permanent="display.mdAndUp.value"
+      :temporary="display.smAndDown.value"
+      :width="drawerWidth"
+      class="app-drawer"
       color="surface"
     >
+      <div class="d-flex d-md-none flex-column px-4 pb-2 pt-4">
+        <span class="text-caption text-medium-emphasis">Plataforma</span>
+        <span class="text-subtitle-1 font-weight-bold">SKILLS Educacional</span>
+      </div>
+
       <v-list
         nav
         density="comfortable"
+        class="px-2 py-2"
       >
         <v-list-item
-          prepend-icon="mdi-view-dashboard"
-          title="Dashboard"
-          value="dashboard"
-          :to="{ name: 'dashboard' }"
-        />
-        <v-list-item
-          prepend-icon="mdi-book-open-variant"
-          title="Meus Cursos"
-          value="cursos"
-          :to="{ name: 'cursos' }"
-        />
-        <v-list-item
-          prepend-icon="mdi-tools"
-          title="Ferramentas"
-          value="ferramentas"
-          :to="{ name: 'ferramentas' }"
-        />
-        <v-list-item
-          prepend-icon="mdi-file-document"
-          title="Materiais"
-          value="materiais"
-        />
-        <v-list-item
-          prepend-icon="mdi-calendar-check"
-          title="Atividades"
-          value="atividades"
-        />
-        <v-list-item
-          prepend-icon="mdi-chart-line"
-          title="Progresso"
-          value="progresso"
-        />
-        <v-list-item
-          prepend-icon="mdi-message-text"
-          title="Mensagens"
-          value="mensagens"
+          v-for="item in navigationItems"
+          :key="item.value"
+          :prepend-icon="item.icon"
+          :title="item.title"
+          :value="item.value"
+          :to="item.to"
+          rounded="xl"
+          @click="handleNavigation"
         />
       </v-list>
 
@@ -100,6 +81,7 @@
             block
             color="primary"
             variant="outlined"
+            class="text-none"
           >
             Suporte
           </v-btn>
@@ -108,8 +90,8 @@
     </v-navigation-drawer>
 
     <!-- Área de Conteúdo Principal -->
-    <v-main>
-      <v-container fluid>
+    <v-main class="app-main">
+      <v-container fluid class="app-shell">
         <slot />
       </v-container>
     </v-main>
@@ -117,22 +99,105 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
 import { useAuthStore } from '@/stores'
 
+const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
-const drawer = ref(true)
+const display = useDisplay()
+const drawer = ref(display.mdAndUp.value)
+
+const drawerWidth = computed(() => (display.smAndDown.value ? 280 : 304))
+
+const navigationItems = [
+  { icon: 'mdi-view-dashboard', title: 'Dashboard', value: 'dashboard', to: { name: 'dashboard' } },
+  { icon: 'mdi-book-open-variant', title: 'Meus Cursos', value: 'cursos', to: { name: 'cursos' } },
+  { icon: 'mdi-tools', title: 'Ferramentas', value: 'ferramentas', to: { name: 'ferramentas' } },
+  { icon: 'mdi-file-document', title: 'Materiais', value: 'materiais' },
+  { icon: 'mdi-calendar-check', title: 'Atividades', value: 'atividades' },
+  { icon: 'mdi-chart-line', title: 'Progresso', value: 'progresso' },
+  { icon: 'mdi-message-text', title: 'Mensagens', value: 'mensagens' }
+]
+
+const toggleDrawer = () => {
+  drawer.value = !drawer.value
+}
+
+const handleNavigation = () => {
+  if (display.smAndDown.value) {
+    drawer.value = false
+  }
+}
+
+watch(
+  () => display.mdAndUp.value,
+  (isDesktop) => {
+    drawer.value = isDesktop
+  }
+)
+
+watch(
+  () => route.fullPath,
+  () => {
+    if (display.smAndDown.value) {
+      drawer.value = false
+    }
+  }
+)
 
 const handleLogout = () => {
+  handleNavigation()
   authStore.logout()
   router.push({ name: 'login' })
 }
 </script>
 
 <style scoped>
-.v-main {
+.app-main {
   background-color: #FAFAFA;
+}
+
+.app-bar :deep(.v-toolbar__content) {
+  padding-inline: 8px;
+}
+
+.app-bar-title {
+  min-width: 0;
+}
+
+.app-bar-title :deep(.v-toolbar-title__placeholder) {
+  overflow: hidden;
+}
+
+.app-bar-title-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-shell {
+  padding: 16px;
+  overflow-x: hidden;
+}
+
+@media (min-width: 960px) {
+  .app-shell {
+    padding: 24px 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-shell {
+    padding: 12px;
+  }
+
+  .app-bar-title-text {
+    font-size: 0.95rem;
+  }
 }
 </style>

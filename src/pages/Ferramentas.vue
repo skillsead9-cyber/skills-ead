@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="ferramentas-page">
     <v-row class="mb-4">
       <v-col cols="12">
-        <h1 class="text-h4 font-weight-bold">Ferramentas da Plataforma</h1>
-        <p class="text-body-1 text-medium-emphasis">
+        <h1 class="ferramentas-title font-weight-bold">Ferramentas da Plataforma</h1>
+        <p class="ferramentas-subtitle text-medium-emphasis">
           Componentes base validados em modo placeholder funcional.
         </p>
       </v-col>
@@ -11,7 +11,7 @@
 
     <v-row class="mb-6">
       <v-col cols="12" md="6">
-        <v-card class="pa-4">
+        <v-card class="pa-4 tool-card">
           <v-card-title class="px-0 pt-0">Inputs e botoes</v-card-title>
           <v-card-text class="px-0 pb-0">
             <v-text-field
@@ -27,11 +27,11 @@
               rows="3"
               class="mb-3"
             />
-            <div class="d-flex gap-2 flex-wrap">
-              <v-btn color="primary" @click="registrarAtividade">
+            <div class="d-flex gap-2 flex-wrap tool-actions">
+              <v-btn color="primary" class="text-none" @click="registrarAtividade">
                 Salvar
               </v-btn>
-              <v-btn variant="outlined" @click="limparFormulario">
+              <v-btn variant="outlined" class="text-none" @click="limparFormulario">
                 Limpar
               </v-btn>
             </div>
@@ -40,7 +40,7 @@
       </v-col>
 
       <v-col cols="12" md="6">
-        <v-card class="pa-4 h-100">
+        <v-card class="pa-4 h-100 tool-card">
           <v-card-title class="px-0 pt-0">Resumo</v-card-title>
           <v-card-text class="px-0 pb-0">
             <p class="text-body-2 mb-2"><strong>Atividade:</strong> {{ nomeAtividade || '---' }}</p>
@@ -58,26 +58,48 @@
         <v-card>
           <v-card-title>Tabela de atividades (placeholder)</v-card-title>
           <v-card-text>
-            <v-table>
-              <thead>
-                <tr>
-                  <th class="text-left">Titulo</th>
-                  <th class="text-left">Tipo</th>
-                  <th class="text-left">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in atividades" :key="item.id">
-                  <td>{{ item.titulo }}</td>
-                  <td>{{ item.tipo }}</td>
-                  <td>
+            <div v-if="smAndDown" class="atividade-mobile-list">
+              <v-card
+                v-for="item in atividades"
+                :key="item.id"
+                variant="outlined"
+                class="mb-3"
+              >
+                <v-card-text class="d-flex flex-column gap-3">
+                  <div>
+                    <div class="text-subtitle-1 font-weight-bold">{{ item.titulo }}</div>
+                    <div class="text-body-2 text-medium-emphasis">{{ item.tipo }}</div>
+                  </div>
+                  <div>
                     <v-chip :color="item.status === 'Ativo' ? 'success' : 'warning'" size="small">
                       {{ item.status }}
                     </v-chip>
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </div>
+            <div v-else class="table-wrapper">
+              <v-table>
+                <thead>
+                  <tr>
+                    <th class="text-left">Titulo</th>
+                    <th class="text-left">Tipo</th>
+                    <th class="text-left">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in atividades" :key="item.id">
+                    <td>{{ item.titulo }}</td>
+                    <td>{{ item.tipo }}</td>
+                    <td>
+                      <v-chip :color="item.status === 'Ativo' ? 'success' : 'warning'" size="small">
+                        {{ item.status }}
+                      </v-chip>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-table>
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -88,7 +110,7 @@
         <FileUpload @upload-complete="onUploadComplete" />
       </v-col>
       <v-col cols="12" md="6">
-        <v-card>
+        <v-card class="h-100">
           <v-card-title>Ultimo upload</v-card-title>
           <v-card-text>
             <div v-if="ultimoUpload.length > 0">
@@ -119,9 +141,11 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useDisplay } from 'vuetify'
 import FileUpload from '@/components/forms/FileUpload.vue'
 import RichTextEditor from '@/components/forms/RichTextEditor.vue'
 
+const { smAndDown } = useDisplay()
 const nomeAtividade = ref('')
 const descricaoAtividade = ref('')
 const conteudoEditor = ref('<p>Escreva aqui o conteudo da atividade.</p>')
@@ -155,7 +179,30 @@ const onUploadComplete = (files) => {
 </script>
 
 <style scoped>
+.ferramentas-title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.ferramentas-subtitle {
+  font-size: clamp(0.98rem, 2.8vw, 1.05rem);
+}
+
 .gap-2 {
   gap: 8px;
+}
+
+.tool-actions > * {
+  flex: 1 1 140px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+@media (min-width: 600px) {
+  .tool-actions > * {
+    flex: 0 0 auto;
+  }
 }
 </style>

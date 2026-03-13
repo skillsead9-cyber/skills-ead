@@ -13,7 +13,7 @@
         elevation="0"
       >
         <v-card-text class="pa-2">
-          <div class="d-flex flex-wrap align-center gap-1">
+          <div class="d-flex flex-wrap align-center gap-1 editor-toolbar-row">
             <!-- Formatação de Texto -->
             <v-btn
               size="small"
@@ -325,6 +325,8 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
   min-height: 300px;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 :deep(.ProseMirror.tiptap-editor) {
@@ -382,7 +384,8 @@ onBeforeUnmount(() => {
   margin: 0;
   overflow: hidden;
   table-layout: fixed;
-  width: 100%;
+  min-width: 100%;
+  width: max-content;
 }
 
 :deep(.ProseMirror table td, .ProseMirror table th) {
@@ -415,5 +418,23 @@ onBeforeUnmount(() => {
 
 .gap-1 {
   gap: 4px;
+}
+
+@media (max-width: 600px) {
+  .editor-toolbar-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .editor-container,
+  :deep(.ProseMirror.tiptap-editor) {
+    min-height: 240px;
+  }
+
+  :deep(.ProseMirror.tiptap-editor) {
+    padding: 12px;
+    font-size: 15px;
+  }
 }
 </style>

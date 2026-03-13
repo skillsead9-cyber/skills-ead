@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="curso-detalhe-page">
     <v-row class="mb-4">
       <v-col cols="12">
-        <h1 class="text-h4 font-weight-bold">Detalhes do Curso</h1>
-        <p class="text-body-1 text-medium-emphasis">
+        <h1 class="curso-detalhe-title font-weight-bold">Detalhes do Curso</h1>
+        <p class="curso-detalhe-subtitle text-medium-emphasis">
           Rota placeholder pronta para a futura integracao de conteudo detalhado.
         </p>
       </v-col>
@@ -11,7 +11,7 @@
 
     <v-row>
       <v-col cols="12" md="8">
-        <v-card>
+        <v-card class="curso-detalhe-card">
           <v-card-title>{{ titulo }}</v-card-title>
           <v-card-text>
             <p class="text-body-1 mb-4">
@@ -40,3 +40,14 @@ const route = useRoute()
 
 const titulo = computed(() => `Curso ${route.params.id}`)
 </script>
+
+<style scoped>
+.curso-detalhe-title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.curso-detalhe-subtitle {
+  font-size: clamp(0.98rem, 2.8vw, 1.05rem);
+}
+</style>

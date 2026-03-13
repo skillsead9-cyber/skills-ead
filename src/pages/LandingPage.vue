@@ -1,155 +1,195 @@
 <template>
   <div class="landing-page">
     <!-- Header Fixo -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-      <!-- Logo fora da navbar para usar altura maxima do header -->
-      <div  class="absolute left-0 px-3 py-3 top-0 bottom-0 z-10 ml-3  flex items-center">
-        <img 
-          src="/logo-skills.png" 
-          alt="Grupo Transformar - SKILLS Educacional" 
-          class="h-full w-auto object-contain"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-        />
-        <div class="hidden font-bold text-xl text-primary">
-          Grupo Transformar
-        </div>
-      </div>
-
-      <nav class="container mx-auto px-4 py-4 pl-24 md:pl-40 flex items-center justify-between">
-
-        <!-- Menu de Navegação (Desktop) -->
-        <ul class="hidden md:flex items-center space-x-6">
-          <li>
-            <a href="#sobre" class="text-gray-700 hover:text-primary transition-colors font-medium">
-              Sobre
-            </a>
-          </li>
-          <li>
-            <a href="#como-funciona" class="text-gray-700 hover:text-primary transition-colors font-medium">
-              Como Funciona
-            </a>
-          </li>
-          <li>
-            <a href="#depoimentos" class="text-gray-700 hover:text-primary transition-colors font-medium">
-              Depoimentos
-            </a>
-          </li>
-          <li>
-            <a href="#contato" class="text-gray-700 hover:text-primary transition-colors font-medium">
-              Contato
-            </a>
-          </li>
-        </ul>
-
-        <!-- Botões de Ação -->
-        <div class="flex items-center space-x-4">
-          <router-link
-            to="/login"
-            class="text-gray-700 hover:text-primary font-medium transition-colors px-4 py-2"
+    <header class="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white/95 shadow-md backdrop-blur">
+      <div class="container mx-auto px-4 sm:px-6">
+        <nav class="flex min-h-[72px] items-center gap-4 md:min-h-[88px]">
+          <a
+            href="#topo"
+            @click.prevent="handleAnchorNavigation('#topo')"
+            class="flex min-w-0 items-center"
           >
-            Login
-          </router-link>
-          <button 
-            @click="scrollToForm"
-            class="bg-secondary text-white px-6 py-2 rounded-lg font-semibold hover:bg-secondary-dark transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Fazer Matrícula
-          </button>
-        </div>
+            <img
+              src="/logo-skills.png"
+              alt="Grupo Transformar - SKILLS Educacional"
+              class="h-11 w-auto max-w-[150px] object-contain sm:h-12 sm:max-w-[170px] md:h-16 md:max-w-[220px]"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            />
+            <div class="hidden font-bold text-xl text-primary md:block">
+              Grupo Transformar
+            </div>
+          </a>
 
-        <!-- Menu Mobile Button -->
-        <button 
-          @click="mobileMenuOpen = !mobileMenuOpen"
-          class="md:hidden text-gray-700 focus:outline-none"
-          aria-label="Menu"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </nav>
+          <!-- Menu de Navegação (Desktop) -->
+          <ul class="hidden items-center gap-6 md:flex">
+            <li>
+              <a href="#sobre" @click.prevent="handleAnchorNavigation('#sobre')" class="text-gray-700 hover:text-primary transition-colors font-medium">
+                Sobre
+              </a>
+            </li>
+            <li>
+              <a href="#como-funciona" @click.prevent="handleAnchorNavigation('#como-funciona')" class="text-gray-700 hover:text-primary transition-colors font-medium">
+                Como Funciona
+              </a>
+            </li>
+            <li>
+              <a href="#depoimentos" @click.prevent="handleAnchorNavigation('#depoimentos')" class="text-gray-700 hover:text-primary transition-colors font-medium">
+                Depoimentos
+              </a>
+            </li>
+            <li>
+              <a href="#contato" @click.prevent="handleAnchorNavigation('#contato')" class="text-gray-700 hover:text-primary transition-colors font-medium">
+                Contato
+              </a>
+            </li>
+          </ul>
 
-      <!-- Menu Mobile -->
-      <div 
-        v-if="mobileMenuOpen"
-        class="md:hidden bg-white border-t shadow-lg"
-      >
-        <ul class="container mx-auto px-4 py-4 space-y-3">
-          <li>
-            <a href="#sobre" @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-primary font-medium">
-              Sobre
-            </a>
-          </li>
-          <li>
-            <a href="#como-funciona" @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-primary font-medium">
-              Como Funciona
-            </a>
-          </li>
-          <li>
-            <a href="#depoimentos" @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-primary font-medium">
-              Depoimentos
-            </a>
-          </li>
-          <li>
-            <a href="#contato" @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-primary font-medium">
-              Contato
-            </a>
-          </li>
-          <li class="pt-4 border-t">
+          <!-- Botões de Ação -->
+          <div class="ml-auto hidden items-center gap-4 md:flex">
             <router-link
               to="/login"
-              @click="mobileMenuOpen = false"
-              class="block text-center bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary-dark transition-colors"
+              class="text-gray-700 hover:text-primary font-medium transition-colors px-4 py-2"
             >
               Login
             </router-link>
-          </li>
-        </ul>
+            <button
+              type="button"
+              @click="scrollToForm"
+              class="bg-secondary text-white px-6 py-2 rounded-lg font-semibold hover:bg-secondary-dark transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Fazer Matrícula
+            </button>
+          </div>
+
+          <!-- Menu Mobile Button -->
+          <button
+            type="button"
+            @click="toggleMobileMenu"
+            class="ml-auto inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 text-gray-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary md:hidden"
+            aria-label="Alternar menu"
+            aria-controls="landing-mobile-menu"
+            :aria-expanded="mobileMenuOpen.toString()"
+          >
+            <svg v-if="!mobileMenuOpen" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg v-else class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </nav>
       </div>
+
+      <!-- Menu Mobile -->
+      <transition name="fade">
+        <div
+          v-if="mobileMenuOpen"
+          id="landing-mobile-menu"
+          class="border-t border-slate-200 bg-white shadow-xl md:hidden"
+        >
+          <div class="container mx-auto px-4 py-4 sm:px-6">
+            <ul class="space-y-2">
+              <li>
+                <button
+                  type="button"
+                  @click="handleAnchorNavigation('#sobre')"
+                  class="block w-full rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition hover:bg-slate-50 hover:text-primary"
+                >
+                  Sobre
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  @click="handleAnchorNavigation('#como-funciona')"
+                  class="block w-full rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition hover:bg-slate-50 hover:text-primary"
+                >
+                  Como Funciona
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  @click="handleAnchorNavigation('#depoimentos')"
+                  class="block w-full rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition hover:bg-slate-50 hover:text-primary"
+                >
+                  Depoimentos
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  @click="handleAnchorNavigation('#contato')"
+                  class="block w-full rounded-xl px-4 py-3 text-left text-base font-medium text-gray-700 transition hover:bg-slate-50 hover:text-primary"
+                >
+                  Contato
+                </button>
+              </li>
+            </ul>
+
+            <div class="mt-4 space-y-3 border-t border-slate-200 pt-4">
+              <router-link
+                to="/login"
+                @click="closeMobileMenu"
+                class="block w-full rounded-xl border border-primary px-6 py-3 text-center font-semibold text-primary transition hover:bg-primary hover:text-white"
+              >
+                Login
+              </router-link>
+              <button
+                type="button"
+                @click="scrollToForm"
+                class="block w-full rounded-xl bg-secondary px-6 py-3 text-center font-semibold text-white shadow-lg transition hover:bg-secondary-dark"
+              >
+                Fazer Matrícula
+              </button>
+            </div>
+          </div>
+        </div>
+      </transition>
     </header>
 
     <!-- Hero Section -->
-    <section class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-primary via-primary-dark to-primary">
-      <div class="container mx-auto px-4">
-        <div class="grid md:grid-cols-2 gap-8 items-center">
+    <section id="topo" class="bg-gradient-to-br from-primary via-primary-dark to-primary pb-12 pt-28 sm:pb-14 sm:pt-32 md:pb-24 md:pt-36">
+      <div class="container mx-auto px-4 sm:px-6">
+        <div class="grid items-center gap-10 md:grid-cols-2 md:gap-8">
           <!-- Conteúdo Textual -->
-          <div class="text-white">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          <div class="max-w-2xl text-white">
+            <h1 class="mb-5 text-3xl font-bold leading-tight sm:text-4xl md:mb-6 md:text-5xl lg:text-6xl">
               Conclua seu Ensino Médio de Forma
               <span class="text-accent"> Rápida e Segura</span>
             </h1>
-            <p class="text-xl md:text-2xl mb-8 text-gray-200">
+            <p class="mb-8 text-lg text-gray-200 sm:text-xl md:text-2xl">
               <strong>Grupo Transformar</strong><br>
               Educação que transforma vidas através da plataforma <strong>SKILLS Educacional</strong>.
             </p>
-            <div class="flex flex-wrap gap-4 mb-8">
-              <div class="flex items-center space-x-2">
-                <svg class="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
+            <div class="grid gap-3 sm:flex sm:flex-wrap sm:gap-4 md:gap-5">
+              <div class="flex items-start gap-2 rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <svg class="mt-0.5 h-6 w-6 shrink-0 text-accent" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
-                <span class="font-medium">100% Online</span>
+                <span class="font-medium leading-snug">100% Online</span>
               </div>
-              <div class="flex items-center space-x-2">
-                <svg class="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
+              <div class="flex items-start gap-2 rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <svg class="mt-0.5 h-6 w-6 shrink-0 text-accent" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
-                <span class="font-medium">Certificado Válido</span>
+                <span class="font-medium leading-snug">Certificado Válido</span>
               </div>
-              <div class="flex items-center space-x-2">
-                <svg class="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 20 20">
+              <div class="flex items-start gap-2 rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+                <svg class="mt-0.5 h-6 w-6 shrink-0 text-accent" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
-                <span class="font-medium">Suporte Personalizado</span>
+                <span class="font-medium leading-snug">Suporte Personalizado</span>
               </div>
             </div>
           </div>
 
           <!-- Formulário de Captação -->
-          <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">
+          <div id="lead-form" class="w-full rounded-[28px] bg-white p-5 shadow-2xl sm:p-6 md:p-8">
+            <h2 class="mb-2 text-center text-2xl font-bold text-gray-800 sm:text-3xl">
               Quero Garantir Minha Vaga
             </h2>
-            <p class="text-gray-600 text-center mb-6">
+            <p class="mb-6 text-center text-gray-600">
               Preencha seus dados e nossa equipe entrará em contato!
             </p>
             
@@ -199,7 +239,7 @@
               <button
                 type="submit"
                 :disabled="submitting"
-                class="w-full bg-secondary text-white py-4 rounded-lg font-bold text-lg hover:bg-secondary-dark transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full rounded-lg bg-secondary py-4 text-lg font-bold text-white transition-colors shadow-lg hover:bg-secondary-dark hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <span v-if="!submitting">Garantir Minha Vaga Agora</span>
                 <span v-else class="flex items-center justify-center">
@@ -232,16 +272,16 @@
     </section>
 
     <!-- Seção: Por que escolher a SKILLS? -->
-    <section id="sobre" class="py-16 md:py-24 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
+    <section id="sobre" class="bg-gray-50 py-14 md:py-24">
+      <div class="container mx-auto px-4 sm:px-6">
+        <h2 class="mb-4 text-center text-3xl font-bold text-gray-800 md:text-4xl">
           Por que escolher o <span class="text-primary">Grupo Transformar</span>?
         </h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p class="mx-auto mb-10 max-w-2xl text-center text-gray-600 md:mb-12">
           Somos uma instituição comprometida com a transformação de vidas através da educação de qualidade, utilizando a plataforma SKILLS Educacional.
         </p>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
           <!-- Card 1: 100% Online -->
           <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-shadow transform hover:-translate-y-1">
             <div class="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mb-4">
@@ -298,18 +338,18 @@
     </section>
 
     <!-- Seção: O que é o EJA Ensino Médio? -->
-    <section id="como-funciona" class="py-16 md:py-24 bg-white">
-      <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
+    <section id="como-funciona" class="bg-white py-14 md:py-24">
+      <div class="container mx-auto px-4 sm:px-6">
+        <h2 class="mb-4 text-center text-3xl font-bold text-gray-800 md:text-4xl">
           O que é o <span class="text-primary">EJA Ensino Médio</span>?
         </h2>
-        <p class="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+        <p class="mx-auto mb-10 max-w-3xl text-center text-gray-600 md:mb-12">
           O EJA (Educação de Jovens e Adultos) é uma modalidade de ensino que permite a conclusão do Ensino Médio para pessoas que não tiveram a oportunidade de estudar na idade adequada ou precisam retomar os estudos.
         </p>
 
         <!-- Linha do Tempo -->
         <div class="max-w-4xl mx-auto">
-          <div class="grid md:grid-cols-4 gap-6">
+          <div class="grid gap-8 md:grid-cols-4 md:gap-6">
             <!-- Etapa 1 -->
             <div class="text-center">
               <div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -359,16 +399,16 @@
     </section>
 
     <!-- Seção: Depoimentos -->
-    <section id="depoimentos" class="py-16 md:py-24 bg-gray-50">
-      <div class="container mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
+    <section id="depoimentos" class="bg-gray-50 py-14 md:py-24">
+      <div class="container mx-auto px-4 sm:px-6">
+        <h2 class="mb-4 text-center text-3xl font-bold text-gray-800 md:text-4xl">
           O que nossos alunos dizem
         </h2>
-        <p class="text-center text-gray-600 mb-12">
+        <p class="mb-10 text-center text-gray-600 md:mb-12">
           Histórias reais de transformação através da educação
         </p>
 
-        <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="mx-auto grid max-w-6xl gap-6 md:grid-cols-3 md:gap-8">
           <!-- Depoimento 1 -->
           <div class="bg-white rounded-xl shadow-lg p-6">
             <div class="flex items-center mb-4">
@@ -436,14 +476,14 @@
     </section>
 
     <!-- Seção: Confiança e Garantias -->
-    <section class="py-16 md:py-24 bg-white">
-      <div class="container mx-auto px-4">
+    <section class="bg-white py-14 md:py-24">
+      <div class="container mx-auto px-4 sm:px-6">
         <div class="max-w-4xl mx-auto text-center">
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
+          <h2 class="mb-8 text-3xl font-bold text-gray-800 md:text-4xl">
             Confiança e Credibilidade
           </h2>
           
-          <div class="grid md:grid-cols-2 gap-8 items-center mb-12">
+          <div class="mb-10 grid items-center gap-6 md:mb-12 md:grid-cols-2 md:gap-8">
             <!-- Logo Grupo Transformar -->
             <div class="bg-gray-50 rounded-xl p-8">
               <h3 class="text-xl font-bold text-gray-800 mb-4">Grupo Transformar</h3>
@@ -467,14 +507,14 @@
           </div>
 
           <!-- Badges de Confiança -->
-          <div class="flex flex-wrap justify-center gap-4">
-            <div class="bg-primary text-white px-6 py-3 rounded-lg font-semibold">
+          <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+            <div class="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-white sm:w-auto">
               ✓ Autorizado pelo MEC
             </div>
-            <div class="bg-secondary text-white px-6 py-3 rounded-lg font-semibold">
+            <div class="w-full rounded-lg bg-secondary px-6 py-3 font-semibold text-white sm:w-auto">
               ✓ Certificado Válido
             </div>
-            <div class="bg-accent text-white px-6 py-3 rounded-lg font-semibold">
+            <div class="w-full rounded-lg bg-accent px-6 py-3 font-semibold text-white sm:w-auto">
               ✓ 100% Online
             </div>
           </div>
@@ -483,16 +523,16 @@
     </section>
 
     <!-- Footer -->
-    <footer id="contato" class="bg-primary text-white py-12">
-      <div class="container mx-auto px-4">
-        <div class="grid md:grid-cols-4 gap-8 mb-8">
+    <footer id="contato" class="bg-primary py-12 text-white">
+      <div class="container mx-auto px-4 sm:px-6">
+        <div class="mb-8 grid gap-8 md:grid-cols-4">
           <!-- Sobre -->
           <div>
             <h3 class="text-xl font-bold mb-4">Grupo Transformar</h3>
             <p class="text-gray-300 mb-4">
               Educação que transforma vidas. Plataforma SKILLS Educacional.
             </p>
-            <div class="flex space-x-4">
+            <div class="flex flex-wrap gap-4">
               <a href="#" class="text-gray-300 hover:text-accent transition-colors" aria-label="Facebook">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -538,22 +578,22 @@
           <!-- Contato -->
           <div>
             <h3 class="text-xl font-bold mb-4">Contato</h3>
-            <ul class="space-y-2 text-gray-300">
-              <li class="flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <ul class="space-y-3 text-gray-300">
+              <li class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
-                <span>contato@skills.educacional</span>
+                <span class="break-all">contato@skills.educacional</span>
               </li>
-              <li class="flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <li class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                 </svg>
                 <span>(00) 0000-0000</span>
               </li>
-              <li class="flex items-center space-x-2">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <li class="flex items-start gap-3">
+                <svg class="mt-0.5 h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
                   <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
                 </svg>
@@ -574,9 +614,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
 
 // Estado do formulário
 const form = ref({
@@ -588,6 +625,36 @@ const form = ref({
 const submitting = ref(false)
 const showSuccess = ref(false)
 const mobileMenuOpen = ref(false)
+
+const closeMobileMenu = () => {
+  mobileMenuOpen.value = false
+}
+
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value
+}
+
+const scrollToElement = (selector, block = 'start') => {
+  const element = document.querySelector(selector)
+
+  if (!element) {
+    closeMobileMenu()
+    return
+  }
+
+  element.scrollIntoView({ behavior: 'smooth', block })
+  closeMobileMenu()
+}
+
+const handleAnchorNavigation = (selector) => {
+  if (selector === '#topo') {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    closeMobileMenu()
+    return
+  }
+
+  scrollToElement(selector)
+}
 
 // Função para enviar formulário
 const handleSubmit = async () => {
@@ -618,11 +685,7 @@ const handleSubmit = async () => {
 
 // Função para scroll suave até o formulário
 const scrollToForm = () => {
-  const formElement = document.querySelector('form')
-  if (formElement) {
-    formElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    mobileMenuOpen.value = false
-  }
+  scrollToElement('#lead-form', 'center')
 }
 </script>
 
@@ -630,6 +693,7 @@ const scrollToForm = () => {
 /* Estilos customizados usando as cores da identidade visual */
 .landing-page {
   font-family: 'Inter', 'Montserrat', 'Poppins', sans-serif;
+  overflow-x: hidden;
 }
 
 /* Scroll suave */
@@ -651,5 +715,15 @@ html {
 
 .landing-page section {
   animation: fadeIn 0.6s ease-out;
+}
+
+.landing-page [id] {
+  scroll-margin-top: 96px;
+}
+
+@media (min-width: 768px) {
+  .landing-page [id] {
+    scroll-margin-top: 112px;
+  }
 }
 </style>

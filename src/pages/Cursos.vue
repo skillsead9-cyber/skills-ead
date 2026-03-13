@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <div class="cursos-page">
     <v-row class="mb-4">
       <v-col cols="12" md="8">
-        <h1 class="text-h4 font-weight-bold">Meus Cursos</h1>
-        <p class="text-body-1 text-medium-emphasis">
+        <h1 class="cursos-title font-weight-bold">Meus Cursos</h1>
+        <p class="cursos-subtitle text-medium-emphasis">
           Explore e continue seus cursos de aprendizado
         </p>
       </v-col>
-      <v-col cols="12" md="4" class="d-flex align-center justify-end">
+      <v-col cols="12" md="4" class="d-flex align-center justify-start justify-md-end">
         <v-text-field
           v-model="search"
           prepend-inner-icon="mdi-magnify"
@@ -16,6 +16,7 @@
           density="compact"
           hide-details
           clearable
+          class="w-100 course-search"
         />
       </v-col>
     </v-row>
@@ -51,7 +52,7 @@
         >
           <v-img
             :src="curso.imagem"
-            height="200"
+            :height="xs ? 180 : 200"
             cover
             class="curso-image"
           >
@@ -62,11 +63,11 @@
             />
           </v-img>
 
-          <v-card-title class="text-h6">
+          <v-card-title class="curso-title">
             {{ curso.titulo }}
           </v-card-title>
 
-          <v-card-subtitle class="text-body-2">
+          <v-card-subtitle class="curso-subtitle">
             {{ curso.descricao }}
           </v-card-subtitle>
 
@@ -85,20 +86,21 @@
             </div>
           </v-card-text>
 
-          <v-card-actions>
+          <v-card-actions class="curso-actions">
             <v-btn
               color="primary"
               variant="text"
               size="small"
+              class="text-none px-0"
             >
               Continuar
-              <v-icon right size="small">mdi-arrow-right</v-icon>
+              <v-icon end size="small">mdi-arrow-right</v-icon>
             </v-btn>
-            <v-spacer />
             <v-chip
               :color="curso.progresso === 100 ? 'success' : 'primary'"
               size="small"
               variant="flat"
+              class="curso-status"
             >
               {{ curso.progresso === 100 ? 'Concluído' : 'Em Andamento' }}
             </v-chip>
@@ -110,7 +112,7 @@
       <v-col v-if="filteredCursos.length === 0" cols="12">
         <v-card>
           <v-card-text class="text-center py-12">
-            <v-icon size="64" color="grey-lighten-1" class="mb-4">
+            <v-icon :size="xs ? 52 : 64" color="grey-lighten-1" class="mb-4">
               mdi-book-open-blank-variant
             </v-icon>
             <p class="text-h6 text-medium-emphasis">Nenhum curso encontrado</p>
@@ -126,9 +128,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useDisplay } from 'vuetify'
 import { useCursosStore } from '@/stores'
 
 const cursosStore = useCursosStore()
+const { xs } = useDisplay()
 
 const search = ref('')
 const loading = ref(false)
@@ -153,10 +157,48 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.cursos-title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.cursos-subtitle {
+  font-size: clamp(0.98rem, 2.8vw, 1.05rem);
+}
+
+.course-search {
+  max-width: 360px;
+}
+
 .curso-card {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.curso-title {
+  font-size: 1.125rem;
+  line-height: 1.3;
+  white-space: normal;
+}
+
+.curso-subtitle {
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.curso-actions {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.curso-status {
+  margin-left: auto;
 }
 
 .curso-image {
@@ -165,5 +207,19 @@ onMounted(async () => {
 
 .curso-card:hover .curso-image {
   transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .course-search {
+    max-width: none;
+  }
+
+  .curso-actions {
+    align-items: flex-start;
+  }
+
+  .curso-status {
+    margin-left: 0;
+  }
 }
 </style>

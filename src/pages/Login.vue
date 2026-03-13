@@ -1,19 +1,19 @@
 <template>
-  <v-container fluid class="fill-height px-4">
-    <v-row align="center" justify="center" class="fill-height">
-      <v-col cols="12" sm="10" md="7" lg="4">
-        <v-card elevation="4" class="pa-6">
-          <div class="text-center mb-6">
+  <v-container fluid class="fill-height login-page px-4 px-sm-6">
+    <v-row align="center" justify="center" class="fill-height login-row">
+      <v-col cols="12" sm="10" md="7" lg="4" xl="3">
+        <v-card elevation="6" class="login-card">
+          <div class="text-center mb-6 login-header">
             <v-img
               src="/logo-skills.png"
               alt="SKILLS Educacional"
-              max-height="80"
-              max-width="200"
+              :max-height="smAndDown ? 68 : 80"
+              :max-width="smAndDown ? 180 : 200"
               contain
               class="mx-auto mb-4"
             />
-            <h1 class="text-h4 font-weight-bold text-primary">SKILLS Educacional</h1>
-            <p class="text-body-2 text-medium-emphasis mt-2">
+            <h1 class="login-title font-weight-bold text-primary">SKILLS Educacional</h1>
+            <p class="login-subtitle text-medium-emphasis mt-2">
               Acesso com sessao backend
             </p>
           </div>
@@ -59,6 +59,7 @@
               size="large"
               block
               :loading="loading"
+              class="text-none"
             >
               Entrar
             </v-btn>
@@ -72,10 +73,12 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useDisplay } from 'vuetify'
 import { useAuthStore } from '@/stores'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const { smAndDown } = useDisplay()
 
 const form = ref(null)
 const valid = ref(false)
@@ -118,7 +121,33 @@ const handleLogin = async () => {
 
 <style scoped>
 .fill-height {
-  min-height: 100vh;
+  min-height: 100dvh;
   background: linear-gradient(135deg, #0b132b 0%, #1a237e 100%);
+}
+
+.login-card {
+  border-radius: 24px;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.login-title {
+  font-size: clamp(1.8rem, 5vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    padding: 20px 16px;
+    border-radius: 20px;
+  }
+
+  .login-header {
+    margin-bottom: 20px;
+  }
 }
 </style>

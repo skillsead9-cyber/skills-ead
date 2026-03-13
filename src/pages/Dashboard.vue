@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <v-row>
+  <div class="dashboard-page">
+    <v-row class="mb-1 mb-sm-2">
       <v-col cols="12">
-        <h1 class="text-h4 font-weight-bold mb-4">Dashboard</h1>
-        <p class="text-body-1 text-medium-emphasis mb-6">
+        <h1 class="dashboard-title font-weight-bold mb-3">Dashboard</h1>
+        <p class="dashboard-subtitle text-medium-emphasis mb-0">
           Bem-vindo ao SKILLS Educacional! Acompanhe seu progresso e atividades.
         </p>
       </v-col>
@@ -12,12 +12,12 @@
     <!-- Cards de Estatísticas -->
     <v-row class="mb-6">
       <v-col cols="12" sm="6" md="3">
-        <v-card color="primary" dark>
-          <v-card-text>
-            <div class="d-flex align-center">
-              <v-icon size="48" class="mr-4">mdi-book-open-variant</v-icon>
+        <v-card color="primary" dark class="h-100 stat-card">
+          <v-card-text class="stat-card-content">
+            <div class="stat-card-inner">
+              <v-icon :size="xs ? 36 : 48" class="mr-4 stat-icon">mdi-book-open-variant</v-icon>
               <div>
-                <div class="text-h4 font-weight-bold">{{ stats.cursos }}</div>
+                <div class="stat-value font-weight-bold">{{ stats.cursos }}</div>
                 <div class="text-body-2">Cursos Ativos</div>
               </div>
             </div>
@@ -26,12 +26,12 @@
       </v-col>
 
       <v-col cols="12" sm="6" md="3">
-        <v-card color="secondary" dark>
-          <v-card-text>
-            <div class="d-flex align-center">
-              <v-icon size="48" class="mr-4">mdi-check-circle</v-icon>
+        <v-card color="secondary" dark class="h-100 stat-card">
+          <v-card-text class="stat-card-content">
+            <div class="stat-card-inner">
+              <v-icon :size="xs ? 36 : 48" class="mr-4 stat-icon">mdi-check-circle</v-icon>
               <div>
-                <div class="text-h4 font-weight-bold">{{ stats.concluidos }}</div>
+                <div class="stat-value font-weight-bold">{{ stats.concluidos }}</div>
                 <div class="text-body-2">Concluídos</div>
               </div>
             </div>
@@ -40,12 +40,12 @@
       </v-col>
 
       <v-col cols="12" sm="6" md="3">
-        <v-card color="accent" dark>
-          <v-card-text>
-            <div class="d-flex align-center">
-              <v-icon size="48" class="mr-4">mdi-calendar-check</v-icon>
+        <v-card color="accent" dark class="h-100 stat-card">
+          <v-card-text class="stat-card-content">
+            <div class="stat-card-inner">
+              <v-icon :size="xs ? 36 : 48" class="mr-4 stat-icon">mdi-calendar-check</v-icon>
               <div>
-                <div class="text-h4 font-weight-bold">{{ stats.atividades }}</div>
+                <div class="stat-value font-weight-bold">{{ stats.atividades }}</div>
                 <div class="text-body-2">Atividades</div>
               </div>
             </div>
@@ -54,12 +54,12 @@
       </v-col>
 
       <v-col cols="12" sm="6" md="3">
-        <v-card color="info" dark>
-          <v-card-text>
-            <div class="d-flex align-center">
-              <v-icon size="48" class="mr-4">mdi-chart-line</v-icon>
+        <v-card color="info" dark class="h-100 stat-card">
+          <v-card-text class="stat-card-content">
+            <div class="stat-card-inner">
+              <v-icon :size="xs ? 36 : 48" class="mr-4 stat-icon">mdi-chart-line</v-icon>
               <div>
-                <div class="text-h4 font-weight-bold">{{ stats.progresso }}%</div>
+                <div class="stat-value font-weight-bold">{{ stats.progresso }}%</div>
                 <div class="text-body-2">Progresso Médio</div>
               </div>
             </div>
@@ -72,42 +72,47 @@
     <v-row>
       <v-col cols="12" md="8">
         <v-card>
-          <v-card-title>
-            <v-icon left>mdi-book-open-page-variant</v-icon>
+          <v-card-title class="section-card-title">
+            <v-icon start>mdi-book-open-page-variant</v-icon>
             Cursos em Andamento
           </v-card-title>
           <v-card-text>
-            <v-list>
+            <v-list class="dashboard-course-list">
               <v-list-item
                 v-for="curso in cursosEmAndamento"
                 :key="curso.id"
-                :title="curso.titulo"
-                :subtitle="curso.descricao"
+                class="px-0"
               >
-                <template v-slot:prepend>
-                  <v-avatar color="primary" size="56">
-                    <v-icon>mdi-book</v-icon>
-                  </v-avatar>
-                </template>
+                <div class="course-item">
+                  <div class="course-item-main">
+                    <v-avatar color="primary" :size="xs ? 48 : 56">
+                      <v-icon :size="xs ? 24 : 28">mdi-book</v-icon>
+                    </v-avatar>
+                    <div class="course-copy">
+                      <div class="text-subtitle-1 font-weight-bold">{{ curso.titulo }}</div>
+                      <div class="text-body-2 text-medium-emphasis">{{ curso.descricao }}</div>
+                    </div>
+                  </div>
 
-                <template v-slot:append>
-                  <v-progress-circular
-                    :model-value="curso.progresso"
-                    :size="60"
-                    :width="6"
-                    color="secondary"
-                  >
-                    {{ curso.progresso }}%
-                  </v-progress-circular>
-                </template>
+                  <div class="course-progress">
+                    <v-progress-circular
+                      :model-value="curso.progresso"
+                      :size="xs ? 54 : 60"
+                      :width="xs ? 5 : 6"
+                      color="secondary"
+                    >
+                      {{ curso.progresso }}%
+                    </v-progress-circular>
+                  </div>
+                </div>
               </v-list-item>
             </v-list>
           </v-card-text>
-          <v-card-actions>
+          <v-card-actions class="flex-wrap justify-end">
             <v-spacer />
-            <v-btn color="primary" variant="text" :to="{ name: 'cursos' }">
+            <v-btn color="primary" variant="text" class="text-none" :to="{ name: 'cursos' }">
               Ver Todos os Cursos
-              <v-icon right>mdi-arrow-right</v-icon>
+              <v-icon end>mdi-arrow-right</v-icon>
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -115,8 +120,8 @@
 
       <v-col cols="12" md="4">
         <v-card>
-          <v-card-title>
-            <v-icon left>mdi-calendar-clock</v-icon>
+          <v-card-title class="section-card-title">
+            <v-icon start>mdi-calendar-clock</v-icon>
             Próximas Atividades
           </v-card-title>
           <v-card-text>
@@ -140,9 +145,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useDisplay } from 'vuetify'
 import { useCursosStore } from '@/stores'
 
 const cursosStore = useCursosStore()
+const { xs } = useDisplay()
 
 const stats = ref({
   cursos: 3,
@@ -175,3 +182,83 @@ onMounted(async () => {
   cursosEmAndamento.value = cursosStore.cursos
 })
 </script>
+
+<style scoped>
+.dashboard-title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  line-height: 1.1;
+}
+
+.dashboard-subtitle {
+  font-size: clamp(0.98rem, 2.8vw, 1.05rem);
+}
+
+.stat-card-content {
+  padding: 20px;
+}
+
+.stat-card-inner {
+  display: flex;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: clamp(1.75rem, 4vw, 2.125rem);
+  line-height: 1.1;
+}
+
+.section-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.course-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 12px 0;
+}
+
+.course-item-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.course-copy {
+  min-width: 0;
+}
+
+.course-progress {
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .stat-card-content {
+    padding: 16px;
+  }
+
+  .stat-card-inner {
+    align-items: flex-start;
+  }
+
+  .course-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .course-item-main {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .course-progress {
+    align-self: flex-end;
+  }
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
-  <v-card>
-    <v-card-title>
+  <v-card class="file-upload-card">
+    <v-card-title class="d-flex align-center flex-wrap">
       <v-icon start>mdi-cloud-upload</v-icon>
       Upload de Arquivos
     </v-card-title>
@@ -26,6 +26,7 @@
           :key="`${file.name}-${index}`"
           :title="file.name"
           :subtitle="formatFileSize(file.size)"
+          class="file-upload-item"
         >
           <template #prepend>
             <v-icon :color="getFileIconColor(file.type)">
@@ -59,11 +60,12 @@
         {{ uploadProgress }}% - {{ currentFileName }}
       </div>
 
-      <div class="d-flex justify-end gap-2 mt-4">
+      <div class="d-flex justify-end gap-2 mt-4 flex-wrap upload-actions">
         <v-btn
           variant="outlined"
           @click="clearFiles"
           :disabled="selectedFiles.length === 0 || uploading"
+          class="text-none"
         >
           Limpar
         </v-btn>
@@ -72,6 +74,7 @@
           @click="handleUpload"
           :disabled="selectedFiles.length === 0 || uploading"
           :loading="uploading"
+          class="text-none"
         >
           <v-icon start>mdi-upload</v-icon>
           Enviar Arquivos
@@ -229,5 +232,21 @@ const getFileIconColor = (mimeType) => {
 <style scoped>
 .gap-2 {
   gap: 8px;
+}
+
+.upload-actions > * {
+  flex: 1 1 160px;
+}
+
+.file-upload-item :deep(.v-list-item-title),
+.file-upload-item :deep(.v-list-item-subtitle) {
+  white-space: normal;
+  word-break: break-word;
+}
+
+@media (min-width: 600px) {
+  .upload-actions > * {
+    flex: 0 0 auto;
+  }
 }
 </style>
